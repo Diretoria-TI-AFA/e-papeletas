@@ -1,0 +1,71 @@
+
+    {
+  "users": [
+        {
+            "nome": "echo",
+            "user": "echo",
+            "senha": "echo",
+            "acesso": "chefe_de_turma",
+            "esquadrilha": "E",
+            "efetivo": "44"
+        },
+        {
+            "nome": "fox",
+            "user": "fox",
+            "senha": "fox",
+            "acesso": "chefe_de_turma",
+            "esquadrilha": "F",
+            "efetivo": "31"
+        },
+        {
+            "nome": "alfa",
+            "user": "alfa",
+            "senha": "alfa",
+            "acesso": "chefe_de_turma",
+            "esquadrilha": "A",
+            "efetivo": "30"
+        },
+        {
+            "nome": "bravo",
+            "user": "bravo",
+            "senha": "bravo",
+            "acesso": "chefe_de_turma",
+            "esquadrilha": "B",
+            "efetivo": "30"
+        },
+        {
+            "nome": "charlie",
+            "user": "charlie",
+            "senha": "charlie",
+            "acesso": "chefe_de_turma",
+            "esquadrilha": "C",
+            "efetivo": "30"
+        },
+        {
+            "nome": "delta",
+            "user": "delta",
+            "senha": "delta",
+            "acesso": "chefe_de_turma",
+            "esquadrilha": "D",
+            "efetivo": "30"
+        },
+        {
+            "nome": "cmd",
+            "user": "cmd",
+            "senha": "cmd",
+            "acesso": "comando"
+        },
+        {
+            "nome": "c4",
+            "user": "c4",
+            "senha": "c4",
+            "acesso": "czinho"
+        },
+        {
+            "nome": "czao",
+            "user": "czao",
+            "senha": "czao",
+            "acesso": "czao"
+        }
+  ]
+}
