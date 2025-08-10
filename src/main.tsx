@@ -10,7 +10,6 @@ import Czinho from '@/pages/Czinho.tsx';
 import Czao from '@/pages/Czao.tsx';
 import Papeletas from './pages/Papeletas.tsx';
 import FaltasDescriminadas from './pages/FaltasDescriminadas.tsx';
-import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
