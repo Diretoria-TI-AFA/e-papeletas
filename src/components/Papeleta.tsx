@@ -4,8 +4,7 @@ import Lista_cad from "./Lista_cad"
 import { Button } from "@/components/ui/button"
 import { useLogin } from "@/../context/LoginContext";
 import { Input } from "./ui/input";
-
-const API_URL = "https://script.google.com/macros/s/AKfycbzcfcQue6bA4yyyCNp5s3IO8YsWTAYhjiGbzhzDTGbq1emg8Eo9nDjsrc1FPGk8Ho_J/exec"
+import { pb } from "../lib/pocketbase";
 
 type CadeteStatuses = {
   [num_nome: string]: string;
@@ -25,52 +24,53 @@ const Papeleta = () => {
     const hoje = `${String(dataAtual.getDate()).padStart(2, "0")}/${meses[dataAtual.getMonth()]}/${dataAtual.getFullYear()}`;
 
     const handleSubmitPapeleta = async () => {
-         if (!hora || !aula) {
-            alert("Por favor, preencha a hora e a aula.");
-            return;
-        }
-        setIsSubmitting(true);
-        const faltosos = Object.entries(cadeteStatuses)
-            .filter(([_, status]) => status !== "0")
-            .map(([num_nome, status]) => ({ num_nome, status }));
+    if (!hora || !aula) {
+      alert("Por favor, preencha a hora e a aula.");
+      return;
+    }
+    setIsSubmitting(true);
 
-        const payload = {
-            esquadrilha: usuarioLogado?.user,
-            data: hoje,
-            hora: hora,
-            aula: aula,
-            efetivo: usuarioLogado?.efetivo,
-            faltas: faltas,
-            emForma: em_forma,
-            faltosos: faltosos
-        };
-
-        try {
-
-        await fetch(API_URL, {
-            method: 'POST',
-            mode: 'no-cors', 
-            body: JSON.stringify({ action: 'submitPapeleta', data: payload }),
-            headers: {
-                'Content-Type': 'application/json', 
-            },
-        });
-
-        alert("Papeleta enviada! O sistema registrou sua requisição.");
-        
-        // Limpa o formulário para o próximo uso
-        setCadeteStatuses({});
-        setHora("");
-        setAula("FORMATURA");
-
-        } catch (error) {
-            // Este erro agora só deve acontecer se houver um problema de rede real (ex: sem internet)
-            console.error("Erro de rede ao enviar a papeleta:", error);
-            alert(`Falha ao enviar a papeleta. Verifique sua conexão com a internet.`);
-        } finally {
-            setIsSubmitting(false);
-        }
+    const papeletaData = {
+      esquadrilha: usuarioLogado?.user,
+      data: hoje,
+      hora: hora,
+      aula: aula,
+      efetivo: usuarioLogado?.efetivo,
+      faltas: faltas,
+      emForma: em_forma,
+      status: "PENDENTE_CZINHO" // Status inicial
     };
+
+    try {
+      const papeletaRecord = await pb.collection('papeletas').create(papeletaData);
+
+      const faltosos = Object.entries(cadeteStatuses)
+        .filter(([_, status]) => status !== "0")
+        .map(([num_nome, status]) => ({
+          papeleta: papeletaRecord.id,
+          cadete: num_nome,
+          status: status
+        }));
+      
+      // Envia os faltosos em um batch request
+      for (const faltoso of faltosos) {
+        await pb.collection('faltosos').create(faltoso);
+      }
+
+      alert("Papeleta enviada com sucesso!");
+
+      // Limpa o formulário
+      setCadeteStatuses({});
+      setHora("");
+      setAula("FORMATURA");
+
+    } catch (error) {
+      console.error("Erro ao enviar a papeleta:", error);
+      alert(`Falha ao enviar a papeleta.`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Card className="bg-yellow-200/50 backdrop-brightness-140 backdrop-blur-xs border-2 border-yellow-200/60 shadow-md shadow-yellow-200/50 transition-shadow duration-300 ease-in-out">

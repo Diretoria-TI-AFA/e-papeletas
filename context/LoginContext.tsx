@@ -1,6 +1,10 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+// context/LoginContext.tsx
 
-interface User {
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { pb } from '@/lib/pocketbase';
+import type { RecordModel } from "pocketbase";
+
+interface User extends RecordModel {
   nome: string;
   user: string;
   acesso: string;
@@ -11,40 +15,40 @@ interface User {
 interface LoginContextType {
   usuarioLogado: User | null;
   loading: boolean;
-  setUsuarioLogado: (user: User | null) => void;
+  login: (identity: string, pass: string) => Promise<void>;
   logout: () => void;
 };
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
 
 export const LoginProvider = ({ children }: { children: ReactNode }) => {
-  const [usuarioLogado, setUsuarioLogadoState] = useState<User | null>(null);
+  const [usuarioLogado, setUsuarioLogado] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("usuarioLogado");
-    if (storedUser) {
-      setUsuarioLogadoState(JSON.parse(storedUser));
+    if (pb.authStore.isValid) {
+      setUsuarioLogado(pb.authStore.model as User);
     }
     setLoading(false);
   }, []);
 
-  const setUsuarioLogado = (user: User | null) => {
-    setUsuarioLogadoState(user);
-    if (user) {
-      localStorage.setItem("usuarioLogado", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("usuarioLogado");
-    }
+  const login = async (identity: string, pass: string) => {
+    console.log("[LoginContext] Tentando autenticar com:", identity);
+    
+    // CORREÇÃO AQUI: 'Users' foi alterado para 'users'
+    const authData = await pb.collection('users').authWithPassword(identity, pass);
+
+    console.log("%c[LoginContext] Sucesso! Dados do usuário:", "color: green;", authData.record);
+    setUsuarioLogado(authData.record as User);
   };
 
   const logout = () => {
+    pb.authStore.clear();
     setUsuarioLogado(null);
-    localStorage.removeItem("usuario")
   };
 
   return (
-    <LoginContext.Provider value={{ usuarioLogado, loading, setUsuarioLogado, logout }}>
+    <LoginContext.Provider value={{ usuarioLogado, loading, login, logout }}>
       {children}
     </LoginContext.Provider>
   );

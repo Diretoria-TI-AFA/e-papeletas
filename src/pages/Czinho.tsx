@@ -2,10 +2,11 @@ import TopMenu from "@/components/TopMenu"
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card"
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button"
+import { pb } from "../lib/pocketbase";
+import type { RecordModel } from "pocketbase";
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzcfcQue6bA4yyyCNp5s3IO8YsWTAYhjiGbzhzDTGbq1emg8Eo9nDjsrc1FPGk8Ho_J/exec"
 
-interface PapeletaPendente {
+interface PapeletaPendente extends RecordModel {
   id: string;
   esquadrilha: string;
   data: string;
@@ -17,18 +18,20 @@ const Czinho = () => {
   const [papeletas, setPapeletas] = useState<PapeletaPendente[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchPapeletas = async () => {
-        setLoading(true);
-        try {
-          const response = await fetch(`${API_URL}?action=getPapeletasCzinho`);
-          const data = await response.json();
-          setPapeletas(data);
-        } catch (error) {
-          console.error("Erro ao buscar papeletas:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
+const fetchPapeletas = async () => {
+    setLoading(true);
+    try {
+      const resultList = await pb.collection('papeletas').getFullList<PapeletaPendente>({
+        filter: 'status = "PENDENTE_CZINHO"',
+      });
+      setPapeletas(resultList);
+    } catch (error) {
+      console.error("Erro ao buscar papeletas:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
 
   useEffect(() => {
@@ -36,19 +39,16 @@ const Czinho = () => {
   }, []);
   
   const handleStatusUpdate = async (papeletaId: string, newStatus: string) => {
-    try {
-        await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'updatePapeletaStatus', papeletaId, newStatus }),
-            headers: { 'Content-Type': 'application/json' },
-        });
+      try {
+        await pb.collection('papeletas').update(papeletaId, { status: newStatus });
         alert(`Papeleta encaminhada para o ${newStatus === 'PENDENTE_CZAO' ? 'Czao' : 'Comando'}!`);
         fetchPapeletas(); // Re-busca os dados para atualizar a lista
-    } catch (error) {
+      } catch (error) {
         console.error("Erro ao atualizar status:", error);
         alert('Falha ao encaminhar papeleta.');
-    }
-  };
+      }
+    };
+
 
   return (
     <section className='h-screen w-screen' style={{ backgroundImage: "url('/fundop.png')",backgroundSize: "100% auto",backgroundPosition: "top center", backgroundRepeat: "no-repeat" }}>
