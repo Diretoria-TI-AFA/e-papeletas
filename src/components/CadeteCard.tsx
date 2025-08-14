@@ -25,22 +25,22 @@ const Num_Nome = `${cad.num_nome}`;
           </SelectTrigger>
           <SelectContent>
                         <SelectItem value="0">Presente</SelectItem>
-                        <SelectItem value="1">AGD</SelectItem>
-                        <SelectItem value="2">ATL</SelectItem>
-                        <SelectItem value="3">BXD</SelectItem>
-                        <SelectItem value="4">CON</SelectItem>
-                        <SelectItem value="5">DPM</SelectItem>
-                        <SelectItem value="6">EME</SelectItem>
-                        <SelectItem value="7">EVV</SelectItem>
-                        <SelectItem value="8">FIS</SelectItem>
-                        <SelectItem value="9">GUI</SelectItem>
-                        <SelectItem value="10">LID</SelectItem>
-                        <SelectItem value="11">ODO</SelectItem>
-                        <SelectItem value="12">OSP</SelectItem>
-                        <SelectItem value="13">SVC</SelectItem>
-                        <SelectItem value="14">SVS</SelectItem>
-                        <SelectItem value="15">VGM</SelectItem>
-                        <SelectItem value="16">VOO</SelectItem>
+                        <SelectItem value="Aguarda desligamento">AGD</SelectItem>
+                        <SelectItem value="Atleta">ATL</SelectItem>
+                        <SelectItem value="Baixado">BXD</SelectItem>
+                        <SelectItem value="Consulta Médica">CON</SelectItem>
+                        <SelectItem value="Dispensa Médica">DPM</SelectItem>
+                        <SelectItem value="Emergência">EME</SelectItem>
+                        <SelectItem value="Esquadrão de voo a vela">EVV</SelectItem>
+                        <SelectItem value="Fisioterapia">FIS</SelectItem>
+                        <SelectItem value="Guia">GUI</SelectItem>
+                        <SelectItem value="Liderança">LID</SelectItem>
+                        <SelectItem value="Odontologia">ODO</SelectItem>
+                        <SelectItem value="Ordem Superior">OSP</SelectItem>
+                        <SelectItem value="Serviço">SVC</SelectItem>
+                        <SelectItem value="Serviço SCAER">SVS</SelectItem>
+                        <SelectItem value="Viagem">VGM</SelectItem>
+                        <SelectItem value="Instrução de Voo">VOO</SelectItem>
           </SelectContent>
         </Select>
       </div>

@@ -1,4 +1,5 @@
-import Link from "next/link"
+// src/components/TopMenu.tsx (ou onde estiver seu arquivo)
+
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -6,165 +7,82 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import { Button } from "@/components/ui/button";
 
+// 1. Importar useNavigate de volta, pois é o correto para seu projeto!
+import { useNavigate } from "react-router-dom"; 
 import { useLogin } from "@/../context/LoginContext";
-import { useNavigate } from "react-router-dom";
+
+// O objeto de configuração continua sendo uma ótima ideia
+const menuConfig = {
+  chefe: [
+    { label: "Início", path: "/chefe" },
+    { label: "Papeletas", path: "/papeletas" },
+  ],
+  cmd: [
+    { label: "Início", path: "/comando" },
+    { label: "Papeletas", path: "/papeletas" },
+  ],
+  c4: [
+    { label: "Início", path: "/czinho" },
+    { label: "Papeletas", path: "/papeletas" },
+    { label: "Faltas", path: "/faltas" },
+  ],
+  czao: [
+    { label: "Início", path: "/czao" },
+    { label: "Faltas", path: "/faltas" },
+  ],
+};
+
+const chefeUsers = ['alfa', 'bravo', 'charlie', 'delta', 'echo', 'fox'];
 
 export function TopMenu() {
-
   const { usuarioLogado, logout } = useLogin();
+  
+  // 2. Usar o hook useNavigate, que agora funcionará corretamente
   const navigate = useNavigate();
+
   const handleLogout = () => {
     logout();
-    navigate("/"); 
+    navigate("/"); // Usando navigate para redirecionar
   };
 
-  
+  const getMenuItems = () => {
+    const userRole = usuarioLogado?.user as keyof typeof menuConfig;
+    if (!userRole) return [];
+    
+    if (chefeUsers.includes(userRole)) {
+      return menuConfig.chefe;
+    }
+    return menuConfig[userRole] || [];
+  };
+
+  const menuItems = getMenuItems();
 
   return (
     <NavigationMenu className="w-full">
       <NavigationMenuList>
         {usuarioLogado && (
           <>
-            
-            {usuarioLogado?.user === 'alfa' && (
-              <>      
-              <NavigationMenuItem>
+            {menuItems.map((item: { label: string; path: string }) => (
+              <NavigationMenuItem key={item.path}>
                 <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/chefe"><h1 className="font-semibold">Início</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>       
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/papeletas"><h1 className="font-semibold">Papeletas</h1></Link>
+                  <Button
+                    onClick={() => navigate(item.path)} // Usando navigate em cada botão
+                    className="font-semibold text-black"
+                  >
+                    {item.label}
+                  </Button>
                 </NavigationMenuLink>
               </NavigationMenuItem>
-              </>
-            )}
-            {usuarioLogado?.user === "bravo" && (
-              <>      
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/chefe"><h1 className="font-semibold">Início</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>       
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/papeletas"><h1 className="font-semibold">Papeletas</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              </>
-            )}
-            {usuarioLogado?.user === "charlie" && (
-              <>      
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/chefe"><h1 className="font-semibold">Início</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>       
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/papeletas"><h1 className="font-semibold">Papeletas</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              </>
-            )}
-            {usuarioLogado?.user === "delta" && (
-              <>      
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/chefe"><h1 className="font-semibold">Início</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>       
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/papeletas"><h1 className="font-semibold">Papeletas</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              </>
-            )}
-            {usuarioLogado?.user === "echo" && (
-              <>      
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/chefe"><h1 className="font-semibold">Início</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>       
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/papeletas"><h1 className="font-semibold">Papeletas</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              </>
-            )}
-            {usuarioLogado?.user === "fox" && (
-              <>      
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/chefe"><h1 className="font-semibold">Início</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>       
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/papeletas"><h1 className="font-semibold">Papeletas</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              </>
-            )}
-            {usuarioLogado?.user === "cmd" && (
-              <>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                    <Link href="/comando"><h1 className="font-semibold">Início</h1></Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                    <Link href="/faltas"><h1 className="font-semibold">Faltas</h1></Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              </>
-            )}
-            {usuarioLogado?.user === "c4" && (
-              <>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/czinho"><h1 className="font-semibold">Início</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/papeletas"><h1 className="font-semibold">Papeletas</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                  <Link href="/faltas"><h1 className="font-semibold">Faltas</h1></Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              </>
-            )}
-            {usuarioLogado?.user === "czao" && (
-              <>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                    <Link href="/czao"><h1 className="font-semibold">Início</h1></Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                    <Link href="/faltas"><h1 className="font-semibold">Faltas</h1></Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              </>
-            )}
-            
+            ))}
+
             <NavigationMenuItem>
               <button
-                className={`${navigationMenuTriggerStyle()} bg-red-500/30 border-2 border-red-300/40 hover:bg-red-400/40 hover:border-red-300/30`}
+                className={`${navigationMenuTriggerStyle()} bg-red-500/30 border-2 border-red-300/40 hover:bg-red-400/40 hover:border-red-300/30 text-black font-semibold`}
                 onClick={handleLogout}
               >
-                <h1 className="font-semibold">Sair</h1>
+                Sair
               </button>
             </NavigationMenuItem>
           </>
@@ -174,4 +92,4 @@ export function TopMenu() {
   );
 }
 
-export default TopMenu
+export default TopMenu;
