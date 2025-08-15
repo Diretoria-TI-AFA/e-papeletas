@@ -1,5 +1,3 @@
-// src/components/Login.tsx
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLogin } from "../../context/LoginContext";
@@ -24,7 +22,6 @@ const Login = () => {
 
     try {
       await login(identity, senha);
-      // O useEffect cuidará do redirecionamento
     } catch (err) {
       console.error("Erro no login:", err);
       setError("Falha ao autenticar. Verifique suas credenciais.");
@@ -39,7 +36,7 @@ const Login = () => {
       // CORREÇÃO AQUI: Verificando o valor correto de 'acesso'
       if (usuarioLogado.acesso === "comando") {
         navigate("/comando");
-      } else if (usuarioLogado.acesso === "chefe_de_turma") { 
+      } else if (usuarioLogado.acesso === "chefe") { 
         navigate("/chefe");
       } else if (usuarioLogado.acesso === "czinho") {
         navigate("/czinho");
@@ -64,12 +61,12 @@ const Login = () => {
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 {/* MUDANÇA AQUI: Label mais clara para o usuário */}
-                <Label htmlFor="identity" className="font-bold">Usuário (username)</Label>
+                <Label htmlFor="identity" className="font-bold">Nome</Label>
                 <Input
                   className="font-semibold"
                   id="identity"
                   type="text"
-                  placeholder="Seu nome de usuário"
+                  placeholder="Nome"
                   value={identity}
                   onChange={(e) => setIdentity(e.target.value)}
                   required
@@ -80,7 +77,7 @@ const Login = () => {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Sua senha"
+                  placeholder="Senha"
                   className="font-semibold"
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}

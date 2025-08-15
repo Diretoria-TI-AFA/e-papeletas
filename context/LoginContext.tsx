@@ -1,10 +1,8 @@
-// context/LoginContext.tsx
-
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import { pb } from '@/lib/pocketbase';
 import type { RecordModel } from "pocketbase";
 
-interface User extends RecordModel {
+interface user extends RecordModel {
   nome: string;
   user: string;
   acesso: string;
@@ -13,7 +11,7 @@ interface User extends RecordModel {
 }
 
 interface LoginContextType {
-  usuarioLogado: User | null;
+  usuarioLogado: user | null;
   loading: boolean;
   login: (identity: string, pass: string) => Promise<void>;
   logout: () => void;
@@ -22,12 +20,12 @@ interface LoginContextType {
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
 
 export const LoginProvider = ({ children }: { children: ReactNode }) => {
-  const [usuarioLogado, setUsuarioLogado] = useState<User | null>(null);
+  const [usuarioLogado, setUsuarioLogado] = useState<user | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (pb.authStore.isValid) {
-      setUsuarioLogado(pb.authStore.model as User);
+      setUsuarioLogado(pb.authStore.model as user);
     }
     setLoading(false);
   }, []);
@@ -35,11 +33,10 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
   const login = async (identity: string, pass: string) => {
     console.log("[LoginContext] Tentando autenticar com:", identity);
     
-    // CORREÇÃO AQUI: 'Users' foi alterado para 'users'
     const authData = await pb.collection('users').authWithPassword(identity, pass);
 
     console.log("%c[LoginContext] Sucesso! Dados do usuário:", "color: green;", authData.record);
-    setUsuarioLogado(authData.record as User);
+    setUsuarioLogado(authData.record as user);
   };
 
   const logout = () => {

@@ -1,5 +1,3 @@
-// src/components/TopMenu.tsx (ou onde estiver seu arquivo)
-
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -9,11 +7,9 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Button } from "@/components/ui/button";
 
-// 1. Importar useNavigate de volta, pois é o correto para seu projeto!
 import { useNavigate } from "react-router-dom"; 
 import { useLogin } from "@/../context/LoginContext";
 
-// O objeto de configuração continua sendo uma ótima ideia
 const menuConfig = {
   chefe: [
     { label: "Início", path: "/chefe" },
@@ -68,7 +64,7 @@ export function TopMenu() {
               <NavigationMenuItem key={item.path}>
                 <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
                   <Button
-                    onClick={() => navigate(item.path)} // Usando navigate em cada botão
+                    onClick={() => navigate(item.path)} 
                     className="font-semibold text-black"
                   >
                     {item.label}
