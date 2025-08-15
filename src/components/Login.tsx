@@ -33,7 +33,6 @@ const Login = () => {
   React.useEffect(() => {
     if (usuarioLogado) {
       console.log("Usuário logado, redirecionando para a rota de acesso:", usuarioLogado.acesso);
-      // CORREÇÃO AQUI: Verificando o valor correto de 'acesso'
       if (usuarioLogado.acesso === "comando") {
         navigate("/comando");
       } else if (usuarioLogado.acesso === "chefe") { 
@@ -60,7 +59,6 @@ const Login = () => {
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                {/* MUDANÇA AQUI: Label mais clara para o usuário */}
                 <Label htmlFor="identity" className="font-bold">Nome</Label>
                 <Input
                   className="font-semibold"

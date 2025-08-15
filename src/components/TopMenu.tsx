@@ -15,11 +15,11 @@ const menuConfig = {
     { label: "Início", path: "/chefe" },
     { label: "Papeletas", path: "/papeletas" },
   ],
-  cmd: [
+  comando: [
     { label: "Início", path: "/comando" },
     { label: "Papeletas", path: "/papeletas" },
   ],
-  c4: [
+  czinho: [
     { label: "Início", path: "/czinho" },
     { label: "Papeletas", path: "/papeletas" },
     { label: "Faltas", path: "/faltas" },
@@ -30,30 +30,24 @@ const menuConfig = {
   ],
 };
 
-const chefeUsers = ['alfa', 'bravo', 'charlie', 'delta', 'echo', 'fox'];
-
 export function TopMenu() {
   const { usuarioLogado, logout } = useLogin();
-  
-  // 2. Usar o hook useNavigate, que agora funcionará corretamente
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate("/"); // Usando navigate para redirecionar
+    navigate("/"); 
   };
 
   const getMenuItems = () => {
-    const userRole = usuarioLogado?.user as keyof typeof menuConfig;
+    const userRole = usuarioLogado?.acesso as keyof typeof menuConfig;
     if (!userRole) return [];
     
-    if (chefeUsers.includes(userRole)) {
-      return menuConfig.chefe;
-    }
     return menuConfig[userRole] || [];
   };
 
   const menuItems = getMenuItems();
+
 
   return (
     <NavigationMenu className="w-full">

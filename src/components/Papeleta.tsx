@@ -31,7 +31,7 @@ const Papeleta = () => {
     setIsSubmitting(true);
 
     const papeletaData = {
-      esquadrilha: usuarioLogado?.user,
+      esquadrilha: usuarioLogado?.username,
       data: hoje,
       hora: hora,
       aula: aula,
@@ -77,7 +77,7 @@ const Papeleta = () => {
         <CardHeader className="text-center">
             <CardTitle className="flex items-center justify-center text-md">Papeleta digital </CardTitle>
             <CardDescription className="text-black text-xs">
-                <p className="uppercase">TURMA {usuarioLogado?.user} </p>
+                <p className="uppercase">TURMA {usuarioLogado?.username} </p>
             </CardDescription>
         </CardHeader>
         <div className="grid grid-cols-2 gap-2 p-2 py-0">

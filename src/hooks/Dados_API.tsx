@@ -4,11 +4,8 @@ import type { RecordModel } from 'pocketbase';
 
 interface Cadete extends RecordModel {
   num_nome: string;
-  user: string;
-  esquadrao?: string;
-  esquadrilha?: string;
-  acesso?: string;
-  efetivo?: string;
+  esquadrao: string;
+  esquadrilha: string;
 }
 
 export function useDadosAPI() {
@@ -20,7 +17,7 @@ export function useDadosAPI() {
       const fetchData = async () => {
         try {
           setLoading(true);
-          const resultList = await pb.collection('cadetes').getFullList<Cadete>({
+          const resultList = await pb.collection('Cadetes').getFullList<Cadete>({
               sort: '-created',
           });
           setData(resultList);

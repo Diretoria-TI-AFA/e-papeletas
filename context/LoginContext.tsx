@@ -4,7 +4,7 @@ import type { RecordModel } from "pocketbase";
 
 interface user extends RecordModel {
   nome: string;
-  user: string;
+  username: string;
   acesso: string;
   esquadrilha?: string;
   efetivo?: string;
@@ -46,7 +46,7 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <LoginContext.Provider value={{ usuarioLogado, loading, login, logout }}>
-      {children}
+      {!loading && children}
     </LoginContext.Provider>
   );
 };
