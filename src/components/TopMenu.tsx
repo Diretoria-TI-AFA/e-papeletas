@@ -21,7 +21,6 @@ const menuConfig = {
   ],
   czinho: [
     { label: "Início", path: "/czinho" },
-    { label: "Papeletas", path: "/papeletas" },
     { label: "Faltas", path: "/faltas" },
   ],
   czao: [

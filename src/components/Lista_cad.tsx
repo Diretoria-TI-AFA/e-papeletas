@@ -13,9 +13,8 @@ interface ListaCadProps {
 }
 
 const Lista_cad = ({ cadeteStatuses, onStatusesChange }: ListaCadProps) => {
-  const { data: todosOsCadetes, loading, error } = useDadosAPI();
   const { usuarioLogado } = useLogin();
-  
+  const { data: todosOsCadetes, loading, error } = useDadosAPI();
   const cadetesFiltrados = useMemo(() => {
     if (!todosOsCadetes || !usuarioLogado?.esquadrilha) {
       return [];
@@ -40,7 +39,7 @@ const Lista_cad = ({ cadeteStatuses, onStatusesChange }: ListaCadProps) => {
     <div className="w-full flex flex-col gap-2 p-4">
       {cadetesFiltrados.length > 0 ? (
         cadetesFiltrados.map((cadete) => (
-          <CadeteCard 
+          <CadeteCard
           key={cadete.num_nome} 
           cad={cadete}
           status={cadeteStatuses[cadete.num_nome] || '0'}

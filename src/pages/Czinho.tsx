@@ -4,19 +4,33 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button"
 import { pb } from "../lib/pocketbase";
 import type { RecordModel } from "pocketbase";
+import { Dialog, DialogContent, DialogDescription, DialogFooter,DialogHeader,DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 
 
 interface PapeletaPendente extends RecordModel {
   id: string;
   esquadrilha: string;
+  esquadrao: string;
   data: string;
   hora: string;
   faltas: number;
+  efetivo: number;
+  aula: string;
+}
+
+interface Faltoso extends RecordModel {
+  num_nome: string;
+  status: string;
+  esquadrilha: string;
+  esquadrao: string;
 }
 
 const Czinho = () => {
   const [papeletas, setPapeletas] = useState<PapeletaPendente[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [faltosos, setFaltosos] = useState<Faltoso[]>([]);
+  const [loadingFaltosos, setLoadingFaltosos] = useState(false);
 
 const fetchPapeletas = async () => {
     setLoading(true);
@@ -32,11 +46,27 @@ const fetchPapeletas = async () => {
     }
   };
 
-
-
   useEffect(() => {
     fetchPapeletas();
   }, []);
+
+  const handleFetchFaltosos = async (papeleta: PapeletaPendente) => {
+    setLoadingFaltosos(true);
+    setFaltosos([]);
+    try {
+      const filter = `esquadrao = "${papeleta.esquadrao}" && esquadrilha = "${papeleta.esquadrilha}" && data = "${papeleta.data}" && hora = "${papeleta.hora}"`;
+      
+      const resultList = await pb.collection('faltas').getFullList<Faltoso>({
+        filter: filter,
+      });
+      
+      setFaltosos(resultList);
+    } catch (error) {
+      console.error("Erro ao buscar faltosos:", error);
+    } finally {
+      setLoadingFaltosos(false);
+    }
+  };
   
   const handleStatusUpdate = async (papeletaId: string, newStatus: string) => {
       try {
@@ -48,7 +78,6 @@ const fetchPapeletas = async () => {
         alert('Falha ao encaminhar papeleta.');
       }
     };
-
 
   return (
     <section className='h-screen w-screen' style={{ backgroundImage: "url('/fundop.png')",backgroundSize: "100% auto",backgroundPosition: "top center", backgroundRepeat: "no-repeat" }}>
@@ -70,12 +99,55 @@ const fetchPapeletas = async () => {
                   <Card key={p.id} className="flex justify-between items-center p-3 bg-white/50">
                     <div>
                       <p><strong>Esquadrilha:</strong> {p.esquadrilha}</p>
-                      <p><strong>Data:</strong> {new Date(p.data).toLocaleDateString()} - {p.hora}</p>
+                      <p><strong>Data:</strong> {p.data} - {p.hora}</p>
                       <p><strong>Faltas:</strong> {p.faltas}</p>
                     </div>
-                    <div>
-                      {/* TODO: Implementar um Modal para visualizar detalhes */}
-                      <Button size="sm" className="mr-2">Visualizar</Button> 
+                    <div className="flex gap-2">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="sm" onClick={() => handleFetchFaltosos(p)}>Ver Detalhes</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle className="uppercase text-center">Retirada de faltas da {p.esquadrilha}</DialogTitle>
+                            <DialogDescription>
+                              <section className="flex gap-30 my-3 w-full mx-auto justify-center">
+                                <div className="text-left">
+                                  <p><strong>Efetivo:</strong> {p.efetivo}</p>
+                                  <p><strong>Faltas:</strong> {p.faltas}</p>
+                                  <p><strong>Em Forma:</strong> {p.efetivo - p.faltas}</p>
+                                </div>
+                                <div className="text-left">
+                                  <p><strong>Data:</strong> {p.data}</p>
+                                  <p><strong>Hora:</strong> {p.hora}</p>
+                                  <p><strong>Aula:</strong> {p.aula}</p>
+                                </div>
+                              </section>
+                            </DialogDescription>
+                          </DialogHeader>
+                            <section>
+                              <h3 className="text-center font-bold">Faltas</h3>
+                              {loadingFaltosos ? (
+                                  <p className="text-center">Carregando...</p>
+                              ) : (
+                                  faltosos.length > 0 ? (
+                                      <div className="flex flex-col gap-2">
+                                          {faltosos.map(f => (
+                                              <div key={f.id} className="flex justify-between items-center text-sm p-1 rounded">
+                                                  <span>{f.num_nome}</span>
+                                                  <span className="text-slate-600 font-semibold">{f.status}</span>
+                                              </div>
+                                          ))}
+                                      </div>
+                                  ) : (
+                                      <p className="text-center text-gray-500">Nenhum faltoso registrado para esta papeleta.</p>
+                                  )
+                              )}
+                            </section>
+                          <DialogFooter>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                       <Button size="sm" onClick={() => handleStatusUpdate(p.id, 'PENDENTE_CZAO')}>
                         Encaminhar para Czao
                       </Button>

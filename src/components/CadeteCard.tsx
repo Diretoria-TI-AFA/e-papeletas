@@ -4,7 +4,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 interface cadete {
   num_nome: string;
   esquadrilha: string;
-  esquadrao: string;
 }
 
 interface CadeteCardProps {

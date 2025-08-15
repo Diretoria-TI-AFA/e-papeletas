@@ -31,6 +31,7 @@ const Papeleta = () => {
     setIsSubmitting(true);
 
     const papeletaData = {
+      esquadrao: usuarioLogado?.esquadrao,
       esquadrilha: usuarioLogado?.username,
       data: hoje,
       hora: hora,
@@ -39,7 +40,7 @@ const Papeleta = () => {
       faltas: faltas,
       emForma: em_forma,
       status: "PENDENTE_CZINHO" // Status inicial
-    };
+    }
 
     try {
       const papeletaRecord = await pb.collection('papeletas').create(papeletaData);
@@ -48,13 +49,17 @@ const Papeleta = () => {
         .filter(([_, status]) => status !== "0")
         .map(([num_nome, status]) => ({
           papeleta: papeletaRecord.id,
-          cadete: num_nome,
-          status: status
+          num_nome: num_nome,
+          status: status,
+          data: hoje,
+          hora: hora,
+          esquadrilha: usuarioLogado?.username,
+          esquadrao: usuarioLogado?.esquadrao
         }));
       
       // Envia os faltosos em um batch request
       for (const faltoso of faltosos) {
-        await pb.collection('faltosos').create(faltoso);
+        await pb.collection('faltas').create(faltoso);
       }
 
       alert("Papeleta enviada com sucesso!");
