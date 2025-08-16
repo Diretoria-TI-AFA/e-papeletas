@@ -25,22 +25,22 @@ const num_nome = `${cad.num_nome}`;
           </SelectTrigger>
           <SelectContent>
                         <SelectItem value="0">Presente</SelectItem>
-                        <SelectItem value="Aguarda desligamento">AGD</SelectItem>
-                        <SelectItem value="Atleta">ATL</SelectItem>
-                        <SelectItem value="Baixado">BXD</SelectItem>
-                        <SelectItem value="Consulta Médica">CON</SelectItem>
-                        <SelectItem value="Dispensa Médica">DPM</SelectItem>
-                        <SelectItem value="Emergência">EME</SelectItem>
-                        <SelectItem value="Esquadrão de voo a vela">EVV</SelectItem>
-                        <SelectItem value="Fisioterapia">FIS</SelectItem>
-                        <SelectItem value="Guia">GUI</SelectItem>
-                        <SelectItem value="Liderança">LID</SelectItem>
-                        <SelectItem value="Odontologia">ODO</SelectItem>
-                        <SelectItem value="Ordem Superior">OSP</SelectItem>
-                        <SelectItem value="Serviço">SVC</SelectItem>
-                        <SelectItem value="Serviço SCAER">SVS</SelectItem>
-                        <SelectItem value="Viagem">VGM</SelectItem>
-                        <SelectItem value="Instrução de Voo">VOO</SelectItem>
+                        <SelectItem value="AGD">AGD</SelectItem>
+                        <SelectItem value="ATL">ATL</SelectItem>
+                        <SelectItem value="BAIXADO">BXD</SelectItem>
+                        <SelectItem value="CON">CON</SelectItem>
+                        <SelectItem value="DPM">DPM</SelectItem>
+                        <SelectItem value="EME">EME</SelectItem>
+                        <SelectItem value="EVV">EVV</SelectItem>
+                        <SelectItem value="FIS">FIS</SelectItem>
+                        <SelectItem value="GUI">GUI</SelectItem>
+                        <SelectItem value="LID">LID</SelectItem>
+                        <SelectItem value="ODO">ODO</SelectItem>
+                        <SelectItem value="OSP">OSP</SelectItem>
+                        <SelectItem value="SVC">SVC</SelectItem>
+                        <SelectItem value="SVS">SVS</SelectItem>
+                        <SelectItem value="VGM">VGM</SelectItem>
+                        <SelectItem value="VOO">VOO</SelectItem>
           </SelectContent>
         </Select>
       </div>

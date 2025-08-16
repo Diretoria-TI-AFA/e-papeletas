@@ -7,6 +7,7 @@ interface user extends RecordModel {
   username: string;
   acesso: string;
   esquadrilha?: string;
+  esquadrao?: string;
   efetivo?: string;
 }
 

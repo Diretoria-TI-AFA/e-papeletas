@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { pb } from "../lib/pocketbase";
 import type { RecordModel } from "pocketbase";
 import { Dialog, DialogContent, DialogDescription, DialogFooter,DialogHeader,DialogTrigger, DialogTitle } from "@/components/ui/dialog";
+import { useLogin } from "../../context/LoginContext";
 
 
 interface PapeletaPendente extends RecordModel {
@@ -26,6 +27,10 @@ interface Faltoso extends RecordModel {
 }
 
 const Czinho = () => {
+  const { usuarioLogado } = useLogin();
+  if (!usuarioLogado || !usuarioLogado.esquadrao) {
+    return <p className="text-center mt-4">Usuário não está logado ou esquadrão não definido.</p>;
+  }
   const [papeletas, setPapeletas] = useState<PapeletaPendente[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +41,7 @@ const fetchPapeletas = async () => {
     setLoading(true);
     try {
       const resultList = await pb.collection('papeletas').getFullList<PapeletaPendente>({
-        filter: 'status = "PENDENTE_CZINHO"',
+        filter: `status = "PENDENTE_CZINHO" && esquadrao = "${usuarioLogado.esquadrao}"`,
       });
       setPapeletas(resultList);
     } catch (error) {
