@@ -6,6 +6,7 @@ import { pb } from "../lib/pocketbase";
 import type { RecordModel } from "pocketbase";
 import { Dialog, DialogContent, DialogDescription, DialogFooter,DialogHeader,DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { useLogin } from "../../context/LoginContext";
+import { toast } from "sonner";
 
 
 interface PapeletaPendente extends RecordModel {
@@ -17,6 +18,7 @@ interface PapeletaPendente extends RecordModel {
   faltas: number;
   efetivo: number;
   aula: string;
+  comentario_retorno?: string;
 }
 
 interface Faltoso extends RecordModel {
@@ -44,6 +46,21 @@ const fetchPapeletas = async () => {
         filter: `status = "PENDENTE_CZINHO" && esquadrao = "${usuarioLogado.esquadrao}"`,
       });
       setPapeletas(resultList);
+
+      resultList.forEach(papeleta => {
+        if (papeleta.comentario_retorno) {
+          toast.warning("Papeleta Retornada pelo Czao", {
+            description: papeleta.comentario_retorno,
+            action: {
+              label: "Ok",
+              onClick: () => console.log("Notificação lida"),
+            },
+          });
+          // Opcional: Limpa o comentário para não mostrar de novo
+          pb.collection('papeletas').update(papeleta.id, { comentario_retorno: '' });
+        }
+      });
+
     } catch (error) {
       console.error("Erro ao buscar papeletas:", error);
     } finally {
